@@ -12,6 +12,7 @@ ENV PANDOC_TEMPLATES_VERSION=${PANDOC_TEMPLATES_VERSION:-2.6}
 ## Download and install RStudio server & dependencies
 ## Attempts to get detect latest version, otherwise falls back to version given in $VER
 ## Symlink pandoc, pandoc-citeproc so they are available system-wide
+COPY rstudio-server-99.9.9-amd64-relwithdebinfo.deb / 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     file \
@@ -34,10 +35,8 @@ RUN apt-get update \
     libllvm3.8 \
     libobjc4 \
     libgc1c2 \
-  && if [ -z "$RSTUDIO_VERSION" ]; then RSTUDIO_URL="https://www.rstudio.org/download/latest/stable/server/debian9_64/rstudio-server-latest-amd64.deb"; else RSTUDIO_URL="http://download2.rstudio.org/server/debian9/x86_64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"; fi \
-  && wget -q $RSTUDIO_URL \
-  && dpkg -i rstudio-server-*-amd64.deb \
-  && rm rstudio-server-*-amd64.deb \
+  && dpkg -i rstudio-server-*-amd64-*.deb \
+  && rm rstudio-server-*-amd64-*.deb \
   ## Symlink pandoc & standard pandoc templates for use system-wide
   && ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin \
   && ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc-citeproc /usr/local/bin \
